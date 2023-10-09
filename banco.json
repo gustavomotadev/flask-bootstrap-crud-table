@@ -1,0 +1,62 @@
+[
+    {
+        "nome": "José Silva",
+        "email": "j.silva@mail.com",
+        "telefone": "(71) 99914-1234",
+        "tipo": "Trabalho"
+    },
+    {
+        "nome": "Maria Oliveira",
+        "email": "maria.o@mail.com",
+        "telefone": "(81) 98765-4321",
+        "tipo": "Família"
+    },
+    {
+        "nome": "Carlos Santos",
+        "email": "c.santos@mail.com",
+        "telefone": "(31) 87654-2109",
+        "tipo": "Amigo"
+    },
+    {
+        "nome": "Ana Souza",
+        "email": "ana.souza@mail.com",
+        "telefone": "(41) 76543-1098",
+        "tipo": "Sem Tipo"
+    },
+    {
+        "nome": "Fernando Lima",
+        "email": "f.lima@mail.com",
+        "telefone": "(51) 65432-9876",
+        "tipo": "Trabalho"
+    },
+    {
+        "nome": "Isabel Pereira",
+        "email": "i.pereira@mail.com",
+        "telefone": "(61) 54321-8765",
+        "tipo": "Família"
+    },
+    {
+        "nome": "Rafaela Costa",
+        "email": "rafaela.c@mail.com",
+        "telefone": "(91) 43210-7654",
+        "tipo": "Amigo"
+    },
+    {
+        "nome": "Antônio Oliveira",
+        "email": "antonio.o@mail.com",
+        "telefone": "(21) 32109-6543",
+        "tipo": "Sem Tipo"
+    },
+    {
+        "nome": "Larissa Silva",
+        "email": "larissa.s@mail.com",
+        "telefone": "(11) 21098-5432",
+        "tipo": "Trabalho"
+    },
+    {
+        "nome": "Rodrigo Pereira",
+        "email": "rodrigo.p@mail.com",
+        "telefone": "(71) 10987-4321",
+        "tipo": "Família"
+    }
+]
