@@ -41,3 +41,25 @@ def apagar_contato(email):
             arquivo_json.truncate()
 
     return contatos
+
+def substituir_contato(novo_contato):
+
+    with open('banco.json', 'r+', encoding='utf-8') as arquivo_json:
+
+        contatos: list = load(arquivo_json)
+
+        indice = None
+        for i in range(len(contatos)):
+            if contatos[i].get('email') == novo_contato.get('email'):
+                indice = i
+                break
+        
+        if indice:
+            contatos.pop(i)
+            contatos.insert(i, novo_contato)
+
+            arquivo_json.seek(0)
+            dump(contatos, arquivo_json, indent=True, ensure_ascii=False)
+            arquivo_json.truncate()
+
+    return contatos

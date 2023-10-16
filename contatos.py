@@ -58,5 +58,38 @@ def remover_contato(email: str):
 
     return render_template('contatos.jinja', contatos=contatos)
 
+@app.route('/editar_contato/<email>', methods=['POST'])
+def editar_contato(email: str):
+
+    if not email:
+        abort(HTTPStatus.BAD_REQUEST)
+
+    contatos = banco.obter_contatos()
+
+    return render_template('contatos.jinja', contatos=contatos, 
+        editar={'email': email})
+
+@app.route('/salvar_edicao', methods=['POST'])
+def salvar_edicao():
+
+    nome = request.form.get('nome')
+    email = request.form.get('email')
+    telefone = request.form.get('telefone')
+    tipo = request.form.get('tipo')
+
+    if not (nome and email and telefone and tipo):
+        abort(HTTPStatus.BAD_REQUEST)
+
+    novo_contato = {
+        "nome": nome,
+        "email": email,
+        "telefone": telefone,
+        "tipo": tipo
+    }
+
+    contatos = banco.substituir_contato(novo_contato)
+
+    return render_template('contatos.jinja', contatos=contatos)
+
 if __name__ == '__main__':
     app.run(debug=True)
