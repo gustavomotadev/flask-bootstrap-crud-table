@@ -8,7 +8,21 @@ def obter_contatos():
 
     return contatos
 
-def gravar_contato(novo_contato):
+def filtrar_contatos(tipo: str = "", ordem: str = "", descendente: bool = False):
+
+    with open('banco.json', 'r', encoding='utf-8') as arquivo_json:
+
+        contatos = load(arquivo_json)
+
+    if tipo:
+        contatos = [c for c in contatos if c.get('tipo') == tipo]
+
+    if ordem:
+        contatos.sort(key=lambda c: c.get(ordem), reverse=descendente)
+
+    return contatos
+
+def gravar_contato(novo_contato: dict):
 
     with open('banco.json', 'r+', encoding='utf-8') as arquivo_json:
 
@@ -21,7 +35,7 @@ def gravar_contato(novo_contato):
 
     return contatos
 
-def apagar_contato(email):
+def apagar_contato(email: str):
 
     with open('banco.json', 'r+', encoding='utf-8') as arquivo_json:
 
@@ -42,7 +56,7 @@ def apagar_contato(email):
 
     return contatos
 
-def substituir_contato(novo_contato):
+def substituir_contato(novo_contato: dict):
 
     with open('banco.json', 'r+', encoding='utf-8') as arquivo_json:
 

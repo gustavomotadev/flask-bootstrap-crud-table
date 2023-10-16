@@ -125,10 +125,13 @@
                         <table class="table table-striped text-nowrap fs-5">
                             <thead>
                                 <tr class="table-danger">
-                                    <th>Nome</th>
-                                    <th>E-mail</th>
-                                    <th>Telefone</th>
-                                    <th>Tipo</th>
+                                    {% for texto in ('nome', 'email', 'telefone', 'tipo')%}
+                                    <th>
+                                        <a href="{{url_for('mostrar_contatos')}}" class="text-decoration-none text-black">{{texto.capitalize()}}</a> 
+                                        <a href="{{url_for('mostrar_contatos', ordem=texto)}}"><i class="bi bi-caret-up-square text-black"></i></a>
+                                        <a href="{{url_for('mostrar_contatos', ordem=texto, descendente='true')}}"><i class="bi bi-caret-down-square text-black"></i></a>
+                                    </th>
+                                    {% endfor %}
                                     <th>Ações</th>
                                 </tr>
                             </thead>

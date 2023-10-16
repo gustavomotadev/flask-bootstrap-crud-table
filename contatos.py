@@ -17,14 +17,20 @@ def page_not_found(erro):
 @app.route('/contatos', methods=['GET'])
 def mostrar_contatos():
 
-    tipo = request.args.get('tipo')
+    tipo = request.args.get('tipo', "")
+    ordem = request.args.get('ordem', "")
+    descendente = request.args.get('descendente', "")
 
-    contatos = banco.obter_contatos()
-    
-    if tipo:
-        contatos = [c for c in contatos if c.get('tipo') == tipo]
+    if descendente and descendente.lower() == 'true':
+        descendente = True
+    else:
+        descendente = False
 
-    return render_template('contatos.jinja', contatos=contatos)
+    contatos = banco.filtrar_contatos(tipo, ordem, descendente)
+
+    return render_template('contatos.jinja', contatos=contatos,
+        query={'tipo': tipo, 'ordem': ordem, 
+        'descendente': descendente})
 
 @app.route('/salvar_contato', methods=['POST'])
 def salvar_contato():
@@ -64,10 +70,20 @@ def editar_contato(email: str):
     if not email:
         abort(HTTPStatus.BAD_REQUEST)
 
-    contatos = banco.obter_contatos()
+    tipo = request.args.get('tipo', "")
+    ordem = request.args.get('ordem', "")
+    descendente = request.args.get('descendente', "")
+
+    if descendente and descendente.lower() == 'true':
+        descendente = True
+    else:
+        descendente = False
+
+    contatos = banco.filtrar_contatos(tipo, ordem, descendente)
 
     return render_template('contatos.jinja', contatos=contatos, 
-        editar={'email': email})
+        editar={'email': email}, query={'tipo': tipo, 
+        'ordem': ordem, 'descendente': descendente})
 
 @app.route('/salvar_edicao', methods=['POST'])
 def salvar_edicao():
