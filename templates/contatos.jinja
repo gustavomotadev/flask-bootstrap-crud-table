@@ -18,61 +18,65 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
-                <div class="modal-body">
-                    <div class="container-fluid mt-3">
-                        <div class="row">
-                            <div class="col-12 col-lg-6 mb-3">
-                                <div class="d-flex align-items-center">
-                                    <i class="bi-person-circle fs-3 pe-3"></i>
-                                    <div class="form-floating flex-grow-1">
-                                        <input type="text" class="form-control" id="nome-contato" placeholder="Nome">
-                                        <label for="nome-contato">Nome</label>
+                <form action="{{url_for('salvar_contato')}}" method="post">
+                
+                    <div class="modal-body">
+                        <div class="container-fluid mt-3">
+                            <div class="row">
+                                <div class="col-12 col-lg-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi-person-circle fs-3 pe-3"></i>
+                                        <div class="form-floating flex-grow-1">
+                                            <input type="text" class="form-control" id="nome-contato" placeholder="Nome" name="nome" required>
+                                            <label for="nome-contato">Nome</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi-envelope-at fs-3 pe-3"></i>
+                                        <div class="form-floating flex-grow-1">
+                                            <input type="email" class="form-control" id="email-contato" placeholder="E-mail" name="email" required>
+                                            <label for="email-contato">E-mail</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 mb-3">
-                                <div class="d-flex align-items-center">
-                                    <i class="bi-envelope-at fs-3 pe-3"></i>
-                                    <div class="form-floating flex-grow-1">
-                                        <input type="email" class="form-control" id="email-contato" placeholder="E-mail">
-                                        <label for="email-contato">E-mail</label>
+                            <div class="row">
+                                <div class="col-12 col-lg-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi-telephone fs-3 pe-3"></i>
+                                        <div class="form-floating flex-grow-1">
+                                            <input type="tel" class="form-control" id="tel-contato" placeholder="Telefone" name="telefone" required>
+                                            <label for="tel-contato">Telefone</label>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 col-lg-6 mb-3">
-                                <div class="d-flex align-items-center">
-                                    <i class="bi-telephone fs-3 pe-3"></i>
-                                    <div class="form-floating flex-grow-1">
-                                        <input type="tel" class="form-control" id="tel-contato" placeholder="Telefone">
-                                        <label for="tel-contato">Telefone</label>
-                                    </div>
+                                <div class="col-12 col-lg-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi-bookmark fs-3 pe-3"></i>
+                                        <div class="form-floating flex-grow-1">
+                                            <select class="form-select" id="tipo-contato" name="tipo" required>
+                                                <option value="" selected>Selecionar</option>
+                                                <option value="Trabalho">Trabalho</option>
+                                                <option value="Família">Família</option>
+                                                <option value="Amigo">Amigo</option>
+                                                <option value="Sem Tipo">Sem Tipo</option>
+                                            </select>
+                                            <label for="tipo-contato">Tipo</label>
+                                        </div>
+                                    </div>     
                                 </div>
-                            </div>
-                            <div class="col-12 col-lg-6 mb-3">
-                                <div class="d-flex align-items-center">
-                                    <i class="bi-bookmark fs-3 pe-3"></i>
-                                    <div class="form-floating flex-grow-1">
-                                        <select class="form-select" id="tipo-contato">
-                                            <option selected>Selecionar</option>
-                                            <option value="1">Trabalho</option>
-                                            <option value="2">Família</option>
-                                            <option value="3">Amigo</option>
-                                            <option value="3">Sem Tipo</option>
-                                          </select>
-                                        <label for="tipo-contato">Tipo</label>
-                                    </div>
-                                </div>     
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary">Salvar Contato</button>
-                </div>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-secondary">Limpar</button>
+                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Salvar Contato</button>
+                    </div>
+
+                </form>
 
             </div>
         </div>
