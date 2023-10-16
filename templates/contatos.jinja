@@ -156,8 +156,10 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-secondary btn-sm fs-6 fw-bold"><i class="bi-pencil-square"></i> Editar</button>
-                                    <button type="button" class="btn btn-danger btn-sm fs-6 fw-bold"><i class="bi-x-lg"></i> Remover</button>
+                                    <form>
+                                        <button type="submit" class="btn btn-secondary btn-sm fs-6 fw-bold"><i class="bi-pencil-square"></i> Editar</button>
+                                        <button type="submit" formmethod="post" formaction="{{url_for('remover_contato', email=contato.email)}}" class="btn btn-danger btn-sm fs-6 fw-bold"><i class="bi-x-lg"></i> Remover</button>
+                                    </form>
                                 </td>
                             </tr>
                             {% else %}

@@ -1,21 +1,6 @@
 from flask import Flask, render_template, request, abort
 from http import HTTPStatus
-from json import load, dump
-
-def obter_contatos():
-    with open('banco.json', 'r', encoding='utf-8') as arquivo_json:
-        contatos = load(arquivo_json)
-    return contatos
-
-def gravar_contato(novo_contato):
-    with open('banco.json', 'r+', encoding='utf-8') as arquivo_json:
-        contatos = load(arquivo_json)
-        contatos.append(novo_contato)
-        arquivo_json.seek(0)
-        dump(contatos, arquivo_json, indent=True, ensure_ascii=False)
-        arquivo_json.truncate()
-
-    return contatos
+import banco
 
 app = Flask(__name__)
 
@@ -34,14 +19,14 @@ def mostrar_contatos():
 
     tipo = request.args.get('tipo')
 
-    contatos = obter_contatos()
+    contatos = banco.obter_contatos()
     
     if tipo:
         contatos = [c for c in contatos if c.get('tipo') == tipo]
 
     return render_template('contatos.jinja', contatos=contatos)
 
-@app.route('/contatos', methods=['POST'])
+@app.route('/salvar_contato', methods=['POST'])
 def salvar_contato():
 
     nome = request.form.get('nome')
@@ -59,7 +44,17 @@ def salvar_contato():
         "tipo": tipo
     }
 
-    contatos = gravar_contato(novo_contato)
+    contatos = banco.gravar_contato(novo_contato)
+
+    return render_template('contatos.jinja', contatos=contatos)
+
+@app.route('/remover_contato/<email>', methods=['POST'])
+def remover_contato(email: str):
+
+    if not email:
+        abort(HTTPStatus.BAD_REQUEST)
+
+    contatos = banco.apagar_contato(email)
 
     return render_template('contatos.jinja', contatos=contatos)
 
