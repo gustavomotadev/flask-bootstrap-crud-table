@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Infinity Contatos{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    {% block head %}
+    {% endblock %}
+</head>
+<body>
+
+    <div class="modal fade" id="modal-adicionar" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Adicionar Contato</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <form action="{{url_for('salvar_contato')}}" method="post">
+                
+                    <div class="modal-body">
+                        <div class="container-fluid mt-3">
+                            <div class="row">
+                                <div class="col-12 col-lg-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi-person-circle fs-3 pe-3"></i>
+                                        <div class="form-floating flex-grow-1">
+                                            <input type="text" class="form-control" id="nome-contato" placeholder="Nome" name="nome" required>
+                                            <label for="nome-contato">Nome</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi-envelope-at fs-3 pe-3"></i>
+                                        <div class="form-floating flex-grow-1">
+                                            <input type="email" class="form-control" id="email-contato" placeholder="E-mail" name="email" required>
+                                            <label for="email-contato">E-mail</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-lg-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi-telephone fs-3 pe-3"></i>
+                                        <div class="form-floating flex-grow-1">
+                                            <input type="tel" class="form-control" id="tel-contato" placeholder="Telefone" name="telefone" required>
+                                            <label for="tel-contato">Telefone</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi-bookmark fs-3 pe-3"></i>
+                                        <div class="form-floating flex-grow-1">
+                                            <select class="form-select" id="tipo-contato" name="tipo" required>
+                                                <option value="" selected>Selecionar</option>
+                                                <option value="Trabalho">Trabalho</option>
+                                                <option value="Família">Família</option>
+                                                <option value="Amigo">Amigo</option>
+                                                <option value="Sem Tipo">Sem Tipo</option>
+                                            </select>
+                                            <label for="tipo-contato">Tipo</label>
+                                        </div>
+                                    </div>     
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-secondary">Limpar</button>
+                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Salvar Contato</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+    
+    <div class="container-fluid p-0 d-flex flex-column vh-100 justify-content-between">
+        <div>
+            <header class="sticky-top">
+                <nav class="navbar navbar-expand-md bg-danger" data-bs-theme="dark">
+                    <div class="container-fluid">
+                        <a class="navbar-brand fs-3" href="#"><i class="bi-infinity"></i> Infinity Contatos</a>
+                
+                        <button class="navbar-toggler border-white border-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                            <i class="bi-list fs-1 text-white"></i>
+                        </button>
+                
+                        <div class="collapse navbar-collapse fs-5 justify-content-end" id="navbarNav">
+                            <ul class="navbar-nav">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="{{url_for('mostrar_contatos')}}">Contatos</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Sobre</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+
+            <main>
+                {% block main %}
+                {% endblock %}
+            </main>
+        </div>
+        
+        <footer class="position-sticky bottom-0 container-fluid bg-danger text-light py-3 d-flex justify-content-center">
+            <p class="m-0">&copy; 2023 Infinity Contatos. Todos os direitos reservados.</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    {% block script %}
+    {% endblock %}
+</body>
+</html>
