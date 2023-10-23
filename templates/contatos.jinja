@@ -128,8 +128,8 @@
                                     {% for texto in ('nome', 'email', 'telefone', 'tipo')%}
                                     <th>
                                         <a href="{{url_for('mostrar_contatos')}}" class="text-decoration-none text-black">{{texto.capitalize()}}</a> 
-                                        <a href="{{url_for('mostrar_contatos', ordem=texto)}}"><i class="bi bi-caret-up-square text-black"></i></a>
-                                        <a href="{{url_for('mostrar_contatos', ordem=texto, descendente='true')}}"><i class="bi bi-caret-down-square text-black"></i></a>
+                                        <a href="{{url_for('mostrar_contatos', ordem=texto, desc='false')}}"><i class="bi bi-caret-up-square text-black"></i></a>
+                                        <a href="{{url_for('mostrar_contatos', ordem=texto, desc='true')}}"><i class="bi bi-caret-down-square text-black"></i></a>
                                     </th>
                                     {% endfor %}
                                     <th>Ações</th>
@@ -139,7 +139,7 @@
 
                                 {% for contato in contatos %}
 
-                                    {% if editar is defined and editar.email == contato.email %} 
+                                    {% if email_editado == contato.email %} 
 
                                     <tr>
                                         <td><input type="text" class="form-control" id="nome-contato" placeholder="Nome" name="nome" value="{{contato.nome}}" required></td>
@@ -154,7 +154,7 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <button type="submit" formmethod="post" formaction="{{url_for('salvar_edicao')}}" class="btn btn-success btn-sm fs-6 fw-bold"><i class="bi-check-square"></i> Editar</button>
+                                            <button type="submit" formmethod="post" formaction="{{url_for('salvar_edicao')}}" class="btn btn-success btn-sm fs-6 fw-bold"><i class="bi-check-square"></i> Salvar</button>
                                             <button type="submit" formmethod="post" formaction="{{url_for('remover_contato', email=contato.email)}}" class="btn btn-danger btn-sm fs-6 fw-bold"><i class="bi-x-lg"></i> Remover</button>
                                         </td>
                                     </tr>

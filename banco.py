@@ -8,7 +8,9 @@ def obter_contatos():
 
     return contatos
 
-def filtrar_contatos(tipo: str = "", ordem: str = "", descendente: bool = False):
+def filtrar_contatos(tipo: str = "", ordem: str = "", desc: bool = False):
+
+    print(desc)
 
     with open('banco.json', 'r', encoding='utf-8') as arquivo_json:
 
@@ -18,7 +20,7 @@ def filtrar_contatos(tipo: str = "", ordem: str = "", descendente: bool = False)
         contatos = [c for c in contatos if c.get('tipo') == tipo]
 
     if ordem:
-        contatos.sort(key=lambda c: c.get(ordem), reverse=descendente)
+        contatos.sort(key=lambda c: c.get(ordem), reverse=bool(desc))
 
     return contatos
 

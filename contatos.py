@@ -1,8 +1,11 @@
-from flask import Flask, render_template, request, abort
+from flask import Flask, render_template, request, abort, session, redirect
 from http import HTTPStatus
+from secrets import token_hex
 import banco
 
 app = Flask(__name__)
+
+app.config.from_mapping(SECRET_KEY=token_hex())
 
 @app.errorhandler(HTTPStatus.NOT_FOUND)
 def page_not_found(erro):
@@ -19,18 +22,30 @@ def mostrar_contatos():
 
     tipo = request.args.get('tipo', "")
     ordem = request.args.get('ordem', "")
-    descendente = request.args.get('descendente', "")
+    desc = request.args.get('desc', "")
+    email_editado = request.args.get('email_editado', "")
 
-    if descendente and descendente.lower() == 'true':
-        descendente = True
+    if tipo:
+        session['tipo'] = tipo
     else:
-        descendente = False
+        tipo = session.get('tipo')
+    if ordem:
+        session['ordem'] = ordem
+    else:
+        ordem = session.get('ordem')
+    if desc and desc.lower() == 'true':
+        desc = True
+        session['desc'] = True
+    elif desc and desc.lower() == 'false':
+        desc = False
+        session['desc'] = False
+    else:
+        desc = session.get('desc')
 
-    contatos = banco.filtrar_contatos(tipo, ordem, descendente)
+    contatos = banco.filtrar_contatos(tipo, ordem, desc)
 
-    return render_template('contatos.jinja', contatos=contatos,
-        query={'tipo': tipo, 'ordem': ordem, 
-        'descendente': descendente})
+    return render_template('contatos.jinja', contatos=contatos, 
+        email_editado=email_editado)
 
 @app.route('/salvar_contato', methods=['POST'])
 def salvar_contato():
@@ -50,9 +65,9 @@ def salvar_contato():
         "tipo": tipo
     }
 
-    contatos = banco.gravar_contato(novo_contato)
+    banco.gravar_contato(novo_contato)
 
-    return render_template('contatos.jinja', contatos=contatos)
+    return redirect('/contatos')
 
 @app.route('/remover_contato/<email>', methods=['POST'])
 def remover_contato(email: str):
@@ -60,9 +75,9 @@ def remover_contato(email: str):
     if not email:
         abort(HTTPStatus.BAD_REQUEST)
 
-    contatos = banco.apagar_contato(email)
+    banco.apagar_contato(email)
 
-    return render_template('contatos.jinja', contatos=contatos)
+    return redirect('/contatos')
 
 @app.route('/editar_contato/<email>', methods=['POST'])
 def editar_contato(email: str):
@@ -70,20 +85,7 @@ def editar_contato(email: str):
     if not email:
         abort(HTTPStatus.BAD_REQUEST)
 
-    tipo = request.args.get('tipo', "")
-    ordem = request.args.get('ordem', "")
-    descendente = request.args.get('descendente', "")
-
-    if descendente and descendente.lower() == 'true':
-        descendente = True
-    else:
-        descendente = False
-
-    contatos = banco.filtrar_contatos(tipo, ordem, descendente)
-
-    return render_template('contatos.jinja', contatos=contatos, 
-        editar={'email': email}, query={'tipo': tipo, 
-        'ordem': ordem, 'descendente': descendente})
+    return redirect(f'/contatos?email_editado={email}')
 
 @app.route('/salvar_edicao', methods=['POST'])
 def salvar_edicao():
@@ -103,9 +105,9 @@ def salvar_edicao():
         "tipo": tipo
     }
 
-    contatos = banco.substituir_contato(novo_contato)
+    banco.substituir_contato(novo_contato)
 
-    return render_template('contatos.jinja', contatos=contatos)
+    return redirect('/contatos')
 
 if __name__ == '__main__':
     app.run(debug=True)
