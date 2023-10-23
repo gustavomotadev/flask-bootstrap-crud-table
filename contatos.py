@@ -9,13 +9,22 @@ app.config.from_mapping(SECRET_KEY=token_hex())
 
 @app.errorhandler(HTTPStatus.NOT_FOUND)
 def page_not_found(erro):
-   return (render_template('erro.jinja', codigo=HTTPStatus.NOT_FOUND, 
+    return (render_template('erro.jinja', codigo=HTTPStatus.NOT_FOUND, 
         mensagem="Página não encontrada"), HTTPStatus.NOT_FOUND)
 
 @app.errorhandler(HTTPStatus.BAD_REQUEST)
-def page_not_found(erro):
-   return render_template('erro.jinja', codigo=HTTPStatus.BAD_REQUEST,
+def bad_request(erro):
+    return render_template('erro.jinja', codigo=HTTPStatus.BAD_REQUEST,
         mensagem="Não foi possível realizar operação"), HTTPStatus.BAD_REQUEST
+
+@app.errorhandler(HTTPStatus.METHOD_NOT_ALLOWED)
+def method_not_allowed(erro):
+    if request.method == 'GET':
+        return (render_template('erro.jinja', codigo=HTTPStatus.NOT_FOUND, 
+            mensagem="Página não encontrada"), HTTPStatus.NOT_FOUND)
+    else:
+        return (render_template('erro.jinja', codigo=HTTPStatus.METHOD_NOT_ALLOWED, 
+            mensagem="Método não permitido"), HTTPStatus.METHOD_NOT_ALLOWED) 
 
 @app.route('/contatos', methods=['GET'])
 def mostrar_contatos():
