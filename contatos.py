@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request, abort, session, redirect
 from http import HTTPStatus
 from secrets import token_hex
-import banco
+from repositorio import RepositorioContato
 
 app = Flask(__name__)
 
 app.config.from_mapping(SECRET_KEY=token_hex())
+
+repo = RepositorioContato('contatos.sqlite')
 
 @app.errorhandler(HTTPStatus.NOT_FOUND)
 def page_not_found(erro):
@@ -35,6 +37,8 @@ def mostrar_contatos():
     email_editado = request.args.get('email_editado', "")
 
     if tipo:
+        if tipo == 'Todos':
+            tipo = ''
         session['tipo'] = tipo
     else:
         tipo = session.get('tipo')
@@ -51,7 +55,7 @@ def mostrar_contatos():
     else:
         desc = session.get('desc')
 
-    contatos = banco.filtrar_contatos(tipo, ordem, desc)
+    contatos = repo.filtrar_ordenar_contatos(tipo, ordem, desc)
 
     return render_template('contatos.jinja', contatos=contatos, 
         email_editado=email_editado)
@@ -67,14 +71,7 @@ def salvar_contato():
     if not (nome and email and telefone and tipo):
         abort(HTTPStatus.BAD_REQUEST)
 
-    novo_contato = {
-        "nome": nome,
-        "email": email,
-        "telefone": telefone,
-        "tipo": tipo
-    }
-
-    banco.gravar_contato(novo_contato)
+    repo.criar_contato(nome, email, telefone, tipo)
 
     return redirect('/contatos')
 
@@ -84,7 +81,7 @@ def remover_contato(email: str):
     if not email:
         abort(HTTPStatus.BAD_REQUEST)
 
-    banco.apagar_contato(email)
+    repo.remover_contato(email)
 
     return redirect('/contatos')
 
@@ -107,14 +104,7 @@ def salvar_edicao():
     if not (nome and email and telefone and tipo):
         abort(HTTPStatus.BAD_REQUEST)
 
-    novo_contato = {
-        "nome": nome,
-        "email": email,
-        "telefone": telefone,
-        "tipo": tipo
-    }
-
-    banco.substituir_contato(novo_contato)
+    repo.alterar_contato(nome, email, telefone, tipo)
 
     return redirect('/contatos')
 
