@@ -1,13 +1,15 @@
+import requests
 from flask import Flask, render_template, request, abort, session, redirect
 from http import HTTPStatus
 from secrets import token_hex
-from repositorio import RepositorioContato
+from repositorio import RepositorioContato, RepositorioWebhook
 
 app = Flask(__name__)
 
 app.config.from_mapping(SECRET_KEY=token_hex())
 
-repo = RepositorioContato('contatos.sqlite')
+repoContato = RepositorioContato('contatos.sqlite')
+repoWebhook = RepositorioWebhook('contatos.sqlite')
 
 @app.errorhandler(HTTPStatus.NOT_FOUND)
 def page_not_found(erro):
@@ -55,7 +57,7 @@ def mostrar_contatos():
     else:
         desc = session.get('desc')
 
-    contatos = repo.filtrar_ordenar_contatos(tipo, ordem, desc)
+    contatos = repoContato.filtrar_ordenar_contatos(tipo, ordem, desc)
 
     return render_template('contatos.jinja', contatos=contatos, 
         email_editado=email_editado)
@@ -71,7 +73,15 @@ def salvar_contato():
     if not (nome and email and telefone and tipo):
         abort(HTTPStatus.BAD_REQUEST)
 
-    repo.criar_contato(nome, email, telefone, tipo)
+    repoContato.criar_contato(nome, email, telefone, tipo)
+
+    webhooks = repoWebhook.consultar_todos_webhooks()
+    # print(webhooks)
+
+    for webhook in webhooks:
+        requests.post(webhook, json={'nome': nome,
+            'email': email, 'telefone': telefone,
+            'tipo': tipo})
 
     return redirect('/contatos')
 
@@ -81,7 +91,7 @@ def remover_contato(email: str):
     if not email:
         abort(HTTPStatus.BAD_REQUEST)
 
-    repo.remover_contato(email)
+    repoContato.remover_contato(email)
 
     return redirect('/contatos')
 
@@ -104,9 +114,33 @@ def salvar_edicao():
     if not (nome and email and telefone and tipo):
         abort(HTTPStatus.BAD_REQUEST)
 
-    repo.alterar_contato(nome, email, telefone, tipo)
+    repoContato.alterar_contato(nome, email, telefone, tipo)
 
     return redirect('/contatos')
+
+@app.route('/webhook', methods=['POST'])
+def cadastrar_webhook():
+
+    url = request.json.get('url')
+
+    if not url:
+        return 'NO URL', HTTPStatus.BAD_REQUEST
+
+    repoWebhook.criar_webhook(url)
+
+    return 'OK', HTTPStatus.OK
+
+@app.route('/webhook', methods=['DELETE'])
+def remover_webhook():
+
+    url = request.json.get('url')
+
+    if not url:
+        return 'NO URL', HTTPStatus.BAD_REQUEST
+
+    repoWebhook.remover_webhook(url)
+
+    return 'OK', HTTPStatus.OK
 
 if __name__ == '__main__':
     app.run(debug=True)

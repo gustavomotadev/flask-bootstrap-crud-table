@@ -108,4 +108,61 @@ class RepositorioContato(object):
         self.connection.commit()
         self.fechar_conexao()
 
+class RepositorioWebhook(object):
+        
+    def __init__(self, nome_db: str) -> None:
+
+        self.nome_db = nome_db
+        self.connection = None
+        self.cursor = None
+
+        self.criar_tabela()
+        
+    def criar_tabela(self) -> None:
+
+        query = 'CREATE TABLE IF NOT EXISTS webhook (url TEXT PRIMARY KEY);'
+        self.abrir_conexao()
+        self.cursor.execute(query)
+        self.connection.commit()
+        self.fechar_conexao()
+        
+    def abrir_conexao(self) -> None:
+
+        self.connection = sqlite3.connect(self.nome_db)
+        self.cursor = self.connection.cursor()
+        
+    def fechar_conexao(self) -> None:
+
+        self.cursor.close()
+        self.connection.close()
+        self.connection = None
+        self.cursor = None
+
+    def criar_webhook(self, url: str) -> None:
+
+        query = 'INSERT INTO webhook (url) VALUES (?);'
+        self.abrir_conexao()
+        self.cursor.execute(query, (url,))
+        self.connection.commit()
+        self.fechar_conexao()
     
+    def consultar_todos_webhooks(self) -> List[dict]:
+
+        query = 'SELECT url FROM webhook;'
+        self.abrir_conexao()
+        self.cursor.execute(query)
+        webhooks = self.cursor.fetchall()
+        self.fechar_conexao()
+
+        for i in range(len(webhooks)):
+            webhooks[i] = webhooks[i][0]
+        
+        return webhooks
+    
+    def remover_webhook(self, url: str) -> None:
+
+        query = 'DELETE FROM webhook WHERE url = ?;'
+        self.abrir_conexao()
+        self.cursor.execute(query, (url,))
+        self.connection.commit()
+        self.fechar_conexao()
