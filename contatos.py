@@ -79,9 +79,12 @@ def salvar_contato():
     # print(webhooks)
 
     for webhook in webhooks:
-        requests.post(webhook, json={'nome': nome,
-            'email': email, 'telefone': telefone,
-            'tipo': tipo})
+        try:
+            requests.post(webhook, json={'nome': nome,
+                'email': email, 'telefone': telefone,
+                'tipo': tipo})
+        except:
+            print('Bad webhook url: ' + webhook)
 
     return redirect('/contatos')
 
